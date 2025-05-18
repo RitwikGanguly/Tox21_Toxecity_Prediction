@@ -121,58 +121,49 @@ Tox24:
     2. Extreme Gradient Boosting (XGBoost)
 
 ## Workflow:
+
 ```mermaid
-flowchart TD;
-    %% Data Preparation Phase
-    subgraph Data Preparation
-        A[Raw Tox21 Assay Data <br> (e.g., tox21-eer-p1, tox21-spec-hek293-p1) <br> & PubChem Compound Information] --> B(Data Cleaning & Standardization);
-        B --> C(Wide-to-Long Format Transformation <br> [Compound-Assay-Concentration-Activity]);
-        C --> D(Feature Engineering);
-        D --> D1[SMILES Processing & <br> Pre-trained Embeddings <br> (e.g., ChemBERTa)];
-        D --> D2[Molecular Graph Construction <br> (from SMILES for GNN)];
-        D --> D3[Assay Type Encoding <br> (e.g., One-Hot)];
-        D --> D4[Concentration Transformation <br> (Log & Scale)];
-        D --> D5[Target Value Scaling <br> (% Inhibition / DATA_Value)];
-    end
+flowchart TD
+    A["Raw Tox21 Assay Data & PubChem Info\n(e.g., tox21-eer-p1, tox21-spec-hek293-p1)"] -->|Data Cleaning & Standardization| B["Initial Data Processing"]
+    B --> C["Wide-to-Long Transformation\n[Cmpd-Assay-Conc-Activity]"]
+    C --> D["Feature Engineering & Scaling\n- SMILES Embeddings (ChemBERTa)\n- Molecular Graphs (for GNN)\n- Assay Type Encoding\n- Conc. & Target Scaling"]
+    D --> E_DataPrep["Processed & Feature-Engineered Dataset"]
 
-    %% Modeling Phase
-    subgraph Modeling Approaches
-        direction LR
-        D1 & D3 & D4 & D5 --> E(MLP with Pre-trained Embeddings);
-        D2 & D3 & D4 & D5 --> F(Graph Neural Network <br> (e.g., GCN with Global Pooling));
-        %% Optional: Add other traditional ML if they were seriously pursued
-        %% C --> G[Traditional ML Models <br> (e.g., Gradient Boosting, RF)];
-    end
+    E_DataPrep --> F_ModelSelection{"Model Approach Selection"}
 
-    %% Training & Evaluation Phase
-    subgraph Model Development & Evaluation
-        E --> H{Model Training & <br> Hyperparameter Optimization <br> (MLP Branch)};
-        F --> I{Model Training & <br> Hyperparameter Optimization <br> (GNN Branch)};
-        %% G --> J{Model Training & Optimization <br> (Traditional ML Branch)};
+    F_ModelSelection --> G_MLP["MLP with Pre-trained Embeddings"]
+    F_ModelSelection --> H_GNN["Graph Neural Network (GCN)"]
+    F_ModelSelection --> I_Traditional["Traditional ML / Gradient Boosting\n(Optional Comparative Branch)"]
 
-        H --> K(Performance Evaluation <br> (Test Set, Scaled & Original Metrics));
-        I --> K;
-        %% J --> K;
-    end
+    G_MLP --> J_MLP_Train["Training & Hyperparameter Opt.\n(MLP)"]
+    H_GNN --> K_GNN_Train["Training & Hyperparameter Opt.\n(GNN)"]
+    I_Traditional --> L_Traditional_Train["Training & Hyperparameter Opt.\n(Traditional ML)"]
 
-    %% Post-Analysis & Application Phase
-    subgraph Post-Analysis & Application
-        K --> L[Best Performing Model Selection <br> (Based on Test Set Metrics)];
-        L --> M[Interpretation & Insights <br> (e.g., Feature Importance, Error Analysis)];
-        M --> N[Application: <br> Toxicity Prediction & <br> Potentially Toxicophoric Group Identification <br> (if model allows, e.g., GNN attention)];
-    end
+    J_MLP_Train --> M_Benchmarking{"Model Benchmarking &\nPerformance Evaluation\n(Test Set, Original Scale Metrics)"}
+    K_GNN_Train --> M_Benchmarking
+    L_Traditional_Train --> M_Benchmarking
 
-    %% Styling (Optional, for better readability if supported by renderer)
-    classDef data fill:#e6f3ff,stroke:#333,stroke-width:2px;
-    classDef model arch fill:#ffe6e6,stroke:#333,stroke-width:2px;
-    classDef train_eval fill:#e6ffe6,stroke:#333,stroke-width:2px;
-    classDef post_analysis fill:#fff0e6,stroke:#333,stroke-width:2px;
+    M_Benchmarking --> N_BestModel["Best Performing Model Selection"]
+    N_BestModel --> O_FinalTrain["Optional: Re-train Best Model\non Full Combined Dataset (Train+Val)"]
+    O_FinalTrain --> P_Application["Application & Interpretation:\n- Toxicity Value Prediction\n- Insights / Toxicophore Identification\n(e.g., via GNN Attention)"]
 
-    class A,B,C,D,D1,D2,D3,D4,D5 data;
-    class E,F model_arch; %% G
-    class H,I,K train_eval; %% J
-    class L,M,N post_analysis;
+    classDef data fill:#e6f3ff,stroke:#333,stroke-width:1px,color:#000
+    classDef model_arch fill:#ffe6e6,stroke:#333,stroke-width:1px,color:#000
+    classDef train_eval fill:#e6ffe6,stroke:#333,stroke-width:1px,color:#000
+    classDef post_analysis fill:#fff0e6,stroke:#333,stroke-width:1px,color:#000
+    classDef decision fill:#fffacd,stroke:#333,stroke-width:1px,color:#000
+
+    class A,B,C,D,E_DataPrep data
+    class G_MLP,H_GNN,I_Traditional model_arch
+    class J_MLP_Train,K_GNN_Train,L_Traditional_Train train_eval
+    class N_BestModel,O_FinalTrain,P_Application post_analysis
+    class F_ModelSelection,M_Benchmarking decision
+
+
 ```
+    
+
+
 ## Hackaton Progress
 
 ```mermaid
