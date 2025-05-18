@@ -1,6 +1,6 @@
 # Team9_Toxicological_Profiles
 ## Aim
-Machine learning tool development for modeling concentration-activity profiles of estrogen-related receptors
+Predicting Compound Toxicity using Deep Learning with Pre-trained Molecular Embeddings and Multi-Modal Assay Data
 
 ## Background
 Estrogen related receptors (ERRs) are one of the first orphan nuclear receptors identified.[1] ERRs are required for high-energy production in response to the environmental and physiological challenges. They play an important role in the control of cellular energy, including mitochondrial biogenesis, gluconeogenesis, and oxidative phosphorylation[1, 2], with signaling implicated in metabolic disorders like type 2 diabetes[2], with EER-alpha (subfamily of EERs) identified as an adverse marker for breast cancer progression.[3]<br>
