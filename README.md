@@ -124,10 +124,10 @@ Tox24:
 
 ```mermaid
 flowchart TD
-    A["Raw Tox21 Assay Data &amp; PubChem Info<br>(Tox-21 Data)"] --> n1["Data Cleaning &amp; Standardization"]
+    A["Raw Tox21 Assay Data &amp; PubChem Info<br><b>(Tox-21 Data)</b>"] --> n1["Data Cleaning &amp; Standardization"]
     n1 --> n2["Initial Data Processing<br>(wise to long transformation)"]
     n2 --> n3(["Feature Enginerring &amp; Scalling<br>(Sample-type Encoding)"])
-    n3 --> n4["SMILE Embedding<br>(<b>ChemBERTa Language Model</b>)"]
+    n3 --> n4["SMILE Embedding<br>(<b>ChemBERTa Language Model</b>)<br><b>[HuggingFace]</b>"]
     n4 --> n5["MODEL SELECTION"]
     n5 --> n6["<b>MLP with Pre-trained Embedding</b>"] & n7["<b>Graph Neural Network<br>(GCN)</b>"]
     n6 --> n8["3 Hidden Layer, <br>MSE Loss Function<br>&amp; Hyperparameter"]
@@ -153,7 +153,7 @@ flowchart TD
     classDef Class_01 fill:#FF6D00
     classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
     classDef Rose stroke-width:1px, stroke-dasharray:none, stroke:#FF5978, fill:#FFDFE5, color:#8E2236
-    style n4 fill:#FFF9C4
+    style n4 fill:#FFD600
     style n6 fill:#E1BEE7
     style n7 fill:#E1BEE7
     style n8 fill:#FFCDD2
@@ -161,6 +161,7 @@ flowchart TD
     style n10 fill:#FFE0B2
     style n11 fill:#C8E6C9
     style n13 fill:#FFE0B2
+
 
 
 ```
