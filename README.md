@@ -61,7 +61,7 @@ Output (4-dimensional vector): DATA corresponding to agonist, DATA corresponding
 With data split:<br>
 train: 5640 samples,<br>
 test: 704 samples,<br>
-validation: 704 samples.
+validation: 704 samples
 
 ### Columns Description
 The [dataset](https://drive.google.com/drive/folders/195KAyBS80Qdu5-uTHUWGVScDd4S7jBmM) is based on the Tox21 Dataset merged with SMILES and IDs from Pubchem.
