@@ -123,14 +123,55 @@ Tox24:
 ## Workflow:
 ```mermaid
 flowchart TD;
-    A[Dataset Creation<br>for EER Toxicity prediction<be>based on Tox21 assays: tox21-err-p1, tox21-spec-hek293-p1<be>and PubChem standarysation] -->|Data Cleaning & Important Feature Selection| --> [Scalling, <br>Z-score Normalization,<br>one-hot encoding ]B@{shape: cyl, label: Mearged Dataset};
-    B --> C@{shape: trap-b, label: Model Preselection};
-    C --> D[Traditional Machine Learning];
-    C --> E[Graph Neural Network];
-    C --> F[Gradient boosted aproaches];
-    D & E & F --> G@{ shape: diamond, label: Model Benchmarking};
-    G --> H[Model training on the full dataset];
-    H --> I[Based on the best model outcomes:<br>**Prediction of toxicophoric groups**<br>a functional groups with the potential of inducing toxicity];
+    %% Data Preparation Phase
+    subgraph Data Preparation
+        A[Raw Tox21 Assay Data <br> (e.g., tox21-eer-p1, tox21-spec-hek293-p1) <br> & PubChem Compound Information] --> B(Data Cleaning & Standardization);
+        B --> C(Wide-to-Long Format Transformation <br> [Compound-Assay-Concentration-Activity]);
+        C --> D(Feature Engineering);
+        D --> D1[SMILES Processing & <br> Pre-trained Embeddings <br> (e.g., ChemBERTa)];
+        D --> D2[Molecular Graph Construction <br> (from SMILES for GNN)];
+        D --> D3[Assay Type Encoding <br> (e.g., One-Hot)];
+        D --> D4[Concentration Transformation <br> (Log & Scale)];
+        D --> D5[Target Value Scaling <br> (% Inhibition / DATA_Value)];
+    end
+
+    %% Modeling Phase
+    subgraph Modeling Approaches
+        direction LR
+        D1 & D3 & D4 & D5 --> E(MLP with Pre-trained Embeddings);
+        D2 & D3 & D4 & D5 --> F(Graph Neural Network <br> (e.g., GCN with Global Pooling));
+        %% Optional: Add other traditional ML if they were seriously pursued
+        %% C --> G[Traditional ML Models <br> (e.g., Gradient Boosting, RF)];
+    end
+
+    %% Training & Evaluation Phase
+    subgraph Model Development & Evaluation
+        E --> H{Model Training & <br> Hyperparameter Optimization <br> (MLP Branch)};
+        F --> I{Model Training & <br> Hyperparameter Optimization <br> (GNN Branch)};
+        %% G --> J{Model Training & Optimization <br> (Traditional ML Branch)};
+
+        H --> K(Performance Evaluation <br> (Test Set, Scaled & Original Metrics));
+        I --> K;
+        %% J --> K;
+    end
+
+    %% Post-Analysis & Application Phase
+    subgraph Post-Analysis & Application
+        K --> L[Best Performing Model Selection <br> (Based on Test Set Metrics)];
+        L --> M[Interpretation & Insights <br> (e.g., Feature Importance, Error Analysis)];
+        M --> N[Application: <br> Toxicity Prediction & <br> Potentially Toxicophoric Group Identification <br> (if model allows, e.g., GNN attention)];
+    end
+
+    %% Styling (Optional, for better readability if supported by renderer)
+    classDef data fill:#e6f3ff,stroke:#333,stroke-width:2px;
+    classDef model arch fill:#ffe6e6,stroke:#333,stroke-width:2px;
+    classDef train_eval fill:#e6ffe6,stroke:#333,stroke-width:2px;
+    classDef post_analysis fill:#fff0e6,stroke:#333,stroke-width:2px;
+
+    class A,B,C,D,D1,D2,D3,D4,D5 data;
+    class E,F model_arch; %% G
+    class H,I,K train_eval; %% J
+    class L,M,N post_analysis;
 ```
 ## Hackaton Progress
 
