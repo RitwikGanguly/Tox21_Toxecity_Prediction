@@ -124,40 +124,43 @@ Tox24:
 
 ```mermaid
 flowchart TD
-    A["Raw Tox21 Assay Data & PubChem Info\n(e.g., tox21-eer-p1, tox21-spec-hek293-p1)"] -->|Data Cleaning & Standardization| B["Initial Data Processing"]
-    B --> C["Wide-to-Long Transformation\n[Cmpd-Assay-Conc-Activity]"]
-    C --> D["Feature Engineering & Scaling\n- SMILES Embeddings (ChemBERTa)\n- Molecular Graphs (for GNN)\n- Assay Type Encoding\n- Conc. & Target Scaling"]
-    D --> E_DataPrep["Processed & Feature-Engineered Dataset"]
-
-    E_DataPrep --> F_ModelSelection{"Model Approach Selection"}
-
-    F_ModelSelection --> G_MLP["MLP with Pre-trained Embeddings"]
-    F_ModelSelection --> H_GNN["Graph Neural Network (GCN)"]
-    F_ModelSelection --> I_Traditional["Traditional ML / Gradient Boosting\n(Optional Comparative Branch)"]
-
-    G_MLP --> J_MLP_Train["Training & Hyperparameter Opt.\n(MLP)"]
-    H_GNN --> K_GNN_Train["Training & Hyperparameter Opt.\n(GNN)"]
-    I_Traditional --> L_Traditional_Train["Training & Hyperparameter Opt.\n(Traditional ML)"]
-
-    J_MLP_Train --> M_Benchmarking{"Model Benchmarking &\nPerformance Evaluation\n(Test Set, Original Scale Metrics)"}
-    K_GNN_Train --> M_Benchmarking
-    L_Traditional_Train --> M_Benchmarking
-
-    M_Benchmarking --> N_BestModel["Best Performing Model Selection"]
-    N_BestModel --> O_FinalTrain["Optional: Re-train Best Model\non Full Combined Dataset (Train+Val)"]
-    O_FinalTrain --> P_Application["Application & Interpretation:\n- Toxicity Value Prediction\n- Insights / Toxicophore Identification\n(e.g., via GNN Attention)"]
-
-    classDef data fill:#e6f3ff,stroke:#333,stroke-width:1px,color:#000
-    classDef model_arch fill:#ffe6e6,stroke:#333,stroke-width:1px,color:#000
-    classDef train_eval fill:#e6ffe6,stroke:#333,stroke-width:1px,color:#000
-    classDef post_analysis fill:#fff0e6,stroke:#333,stroke-width:1px,color:#000
-    classDef decision fill:#fffacd,stroke:#333,stroke-width:1px,color:#000
-
-    class A,B,C,D,E_DataPrep data
-    class G_MLP,H_GNN,I_Traditional model_arch
-    class J_MLP_Train,K_GNN_Train,L_Traditional_Train train_eval
-    class N_BestModel,O_FinalTrain,P_Application post_analysis
-    class F_ModelSelection,M_Benchmarking decision
+    A["Raw Tox21 Assay Data &amp; PubChem Info<br>(Tox-21 Data)"] --> n1["Data Cleaning &amp; Standardization"]
+    n1 --> n2["Initial Data Processing<br>(wise to long transformation)"]
+    n2 --> n3(["Feature Enginerring &amp; Scalling<br>(Sample-type Encoding)"])
+    n3 --> n4["SMILE Embedding<br>(<b>ChemBERTa Language Model</b>)"]
+    n4 --> n5["MODEL SELECTION"]
+    n5 --> n6["<b>MLP with Pre-trained Embedding</b>"] & n7["<b>Graph Neural Network<br>(GCN)</b>"]
+    n6 --> n8["3 Hidden Layer, <br>MSE Loss Function<br>&amp; Hyperparameter"]
+    n7 --> n9["3 Layers<br>GCN Approach, <br>MSE Loss Function<br>&amp; Hyperparameters"]
+    n8 --> n10["MODEL EVALUATION<br>AND<br>METRIC CALCULATION<br><b>(R2-score, MSE)</b>"]
+    n9 --> n10
+    n10 --> n11(["With the different concentration values of Bio-molecule, we need to predict the corresponding<br><b>Toxicity Value</b>"])
+    n11 --> n13["CURVE FITTING with Concentration and Toxecity Value<br><b>(if value &gt; 0 : TOXIC <br>else: NON-Toxic)</b>"]
+    A@{ shape: tag-doc}
+    n4@{ shape: disk}
+    n5@{ shape: hex}
+    n6@{ shape: trap-b}
+    n7@{ shape: trap-b}
+    n10@{ shape: diam}
+    n13@{ shape: h-cyl}
+     A:::Rose
+     n1:::Aqua
+     n2:::Aqua
+     n3:::Aqua
+     n5:::Peach
+     n13:::Class_01
+    classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef Class_01 fill:#FF6D00
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    classDef Rose stroke-width:1px, stroke-dasharray:none, stroke:#FF5978, fill:#FFDFE5, color:#8E2236
+    style n4 fill:#FFF9C4
+    style n6 fill:#E1BEE7
+    style n7 fill:#E1BEE7
+    style n8 fill:#FFCDD2
+    style n9 fill:#FFCDD2
+    style n10 fill:#FFE0B2
+    style n11 fill:#C8E6C9
+    style n13 fill:#FFE0B2
 
 
 ```
